@@ -3,10 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Code/JAVA/ProjectQLCB/src/QLCB/GuiInsertCB.java</file>
-            <file>file:/D:/Code/JAVA/ProjectQLCB/src/QLCB/ICanbo.java</file>
             <file>file:/D:/Code/JAVA/ProjectQLCB/src/QLCB/Canbo.java</file>
+            <file>file:/D:/Code/JAVA/ProjectQLCB/src/QLCB/ICanbo.java</file>
+            <file>file:/D:/Code/JAVA/ProjectQLCB/src/QLCB/GuiInsertCB.java</file>
             <file>file:/D:/Code/JAVA/ProjectQLCB/src/QLCB/QLCB.java</file>
+            <file>file:/D:/Code/JAVA/ProjectQLCB/src/QLCB/Test_insertCB.java</file>
         </group>
     </open-files>
 </project-private>

@@ -10,10 +10,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 
-/**
- *
- * @author Admin
- */
 public class GuiInsertCB extends JFrame implements ActionListener, MouseListener {
 
     private JTextField tfAccountNumber;
@@ -41,11 +37,11 @@ public class GuiInsertCB extends JFrame implements ActionListener, MouseListener
                     break;
                 }
             }
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
             System.out.println("Nimbus not found.");
         }
         BuildGUI();
-        loadData(dfModel);
+        //loadData(dfModel);
     }
 
     private void BuildGUI() {
@@ -130,20 +126,150 @@ public class GuiInsertCB extends JFrame implements ActionListener, MouseListener
 
         this.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, pnLeft, pnRight));
         //loadData(dfModel);
+        
+        //Bắt sự kiện kích chọn trong bảng
+        tb.getSelectionModel().addListSelectionListener(e -> {
+            try {
+                int selectedRow = tb.getSelectedRow();
+                if (selectedRow != -1) {
+                    tfAccountNumber.setText(tb.getValueAt(selectedRow, 0).toString());
+                    tfName.setText(tb.getValueAt(selectedRow, 1).toString());
+                    String gender = tb.getValueAt(selectedRow, 2).toString();
+                    if (gender.equals("Nam")) {
+                        rbMale.setSelected(true);
+                    } else if (gender.equals("Nữ")) {
+                        rbFemale.setSelected(true);
+                    }
+                    tfAddress.setText(tb.getValueAt(selectedRow, 3).toString());
+                    tfSalary.setText(tb.getValueAt(selectedRow, 4).toString());
+                }
+                
+            } catch (ArrayIndexOutOfBoundsException ex) {
+            }
+        });
+        
+        
+        //Bắt sự kiện thêm mới
+        btAdd.addActionListener((var e) -> {
+            String accountNumber = tfAccountNumber.getText().trim();
+            String name = tfName.getText().trim();
+            String gender = "";
+            
+            if(rbMale.isSelected()) {
+                gender = rbMale.getText();
+            } else if(rbFemale.isSelected()) {
+                gender = rbFemale.getText();
+            }
+            
+            String address = tfAddress.getText().trim();
+            int salary = 0;
+            boolean isValid = true;
+            
+            try {
+                salary = Integer.parseInt(tfSalary.getText().trim());
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Nhập lương không hợp lệ!" + ex.getMessage());
+                isValid = false;
+            }
+            
+            if(accountNumber.isEmpty() || name.isEmpty() || !isValid) {
+                JOptionPane.showMessageDialog(null, "Vui lòng nhập thông tin cán bộ!");
+            } else {
+                if (QLCB.checkAccountNumberExists(accountNumber)) {
+                    JOptionPane.showMessageDialog(null, "Số tài khoản đã tồn tại!");
+                } else {
+                    boolean res = QLCB.insertCB(new Canbo(accountNumber, name, gender, address, salary));
+                    if(res) {
+                        loadData(dfModel);
+                        JOptionPane.showMessageDialog(null, "Thêm cán bộ thành công!");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Thêm cán bộ thất bại!");
+                    }
+                }
+            }
+        });
+        
+        //Bắt sự kiện btn sửa
+        btEdit.addActionListener(e -> {
+            String accountNumber = tfAccountNumber.getText().trim();
+            String name = tfName.getText().trim();
+            String gender = "";
+            
+            if(rbMale.isSelected()) {
+                gender = rbMale.getText();
+            } else if(rbFemale.isSelected()) {
+                gender = rbFemale.getText();
+            }
+            
+            String address = tfAddress.getText().trim();
+            int salary = 0;
+            boolean isValid = true;
+            
+            ResultSet resAccountNummber = QLCB.getData(accountNumber);
+            
+            try {
+                if (resAccountNummber != null && resAccountNummber.next()) {
+                    try {
+                        salary = Integer.parseInt(tfSalary.getText().trim());
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "Nhập lương không hợp lệ!" + ex.getMessage());
+                        isValid = false;
+                    }
+
+                    if(accountNumber.isEmpty() || name.isEmpty() || !isValid) {
+                        JOptionPane.showMessageDialog(null, "Vui lòng nhập thông tin cán bộ!");
+                    } else {
+                        boolean res = QLCB.updateData(accountNumber, new Canbo(accountNumber, name, gender, address, salary));
+                        if(res) {
+                            loadData(dfModel);
+                            JOptionPane.showMessageDialog(null, "Sửa cán bộ thành công!");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Cập nhật thất bại!");
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Không tồn tại mã cán bộ: " + accountNumber);
+                }
+            } catch (HeadlessException | SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Error");
+            }
+        });
+        
+        //Bắt sự kiện xóa
+        btDelete.addActionListener(e -> {
+            String accountNumber = tfAccountNumber.getText().trim();
+            if (accountNumber.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Chọn một cán bộ để xóa!");
+            } else {
+                int confirmation = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+                if (confirmation == JOptionPane.YES_OPTION) {
+                    boolean res = QLCB.deleteCB(accountNumber);
+                    if (res) {
+                        loadData(dfModel);
+                        JOptionPane.showMessageDialog(null, "Xóa thành công!");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Xóa thất bại!");
+                    }
+                }
+            }
+        });
+
+        
+        loadData(dfModel);
     }
 
     public static void main(String[] args) {
-        QLCB qlcb = new QLCB();
-        qlcb.getCon();
+        QLCB.getCon();
         SwingUtilities.invokeLater(() -> {
             new GuiInsertCB().setVisible(true);
-            //guiInsertCB.loadData(guiInsertCB.dfModel);
         });
     }
 
-    public void loadData(DefaultTableModel dfModel) {
+    private void loadData(DefaultTableModel dfModel) {
         try {
             ResultSet res = QLCB.getAllData();
+            dfModel.setRowCount(0);
+            dfModel.fireTableDataChanged();
             if (res != null) {
                 while (res.next()) {
                     dfModel.addRow(new String[]{
@@ -155,19 +281,13 @@ public class GuiInsertCB extends JFrame implements ActionListener, MouseListener
                     });
                 }
             }
-            dfModel.fireTableDataChanged();
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex.getMessage());
         }
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btAdd) {
-        } else if (e.getSource() == btEdit) {
-        } else if (e.getSource() == btDelete) {
-        }
-    }
+    public void actionPerformed(ActionEvent e) {}
 
     @Override
     public void mouseClicked(MouseEvent e) {}

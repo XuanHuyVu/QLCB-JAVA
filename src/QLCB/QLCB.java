@@ -16,7 +16,6 @@ public class QLCB {
         }
     }
 
-    // Get data by account number
     public static ResultSet getData(String SoTk) {
         try {
             PreparedStatement pst = cn.prepareStatement("SELECT * FROM tbCanBo WHERE SoTk = '"+SoTk+"'");
@@ -27,10 +26,10 @@ public class QLCB {
         }
     }
 
-    // Update data
+    // Sửa
     public static boolean updateData(String SoTk, Canbo cb) {
         try {
-            PreparedStatement pst = cn.prepareStatement("UPDATE tbCanBo SET Hoten = '"+cb.getHoTen()+"', GioiTinh = '"+cb.getGioiTinh()+"', DiaChi = '"+cb.getDiaChi()+"', Luong = '"+cb.getLuong()+"' WHERE SoTk = '"+SoTk+"'");
+            PreparedStatement pst = cn.prepareStatement("UPDATE tbCanBo SET Hoten = '"+cb.getHoTen()+"', GT = '"+cb.getGioiTinh()+"', Diachi = '"+cb.getDiaChi()+"', Luong = '"+cb.getLuong()+"' WHERE SoTK = '"+SoTk+"'");
             int res = pst.executeUpdate();
             return res > 0;
         } catch (Exception e) {
@@ -44,26 +43,55 @@ public class QLCB {
         try {
             Statement st = cn.createStatement();
             return st.executeQuery("SELECT * FROM tbCanBo");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
             return null;
         }
     }
 
-    // Insert a new Canbo
-    public boolean insertCB(Canbo cb) {
+    // Thêm
+    public static boolean insertCB(Canbo cb) {
         try {
-            PreparedStatement pst = cn.prepareStatement("INSERT INTO tbCanBo (SoTk, Hoten, GioiTinh, DiaChi, Luong) VALUES (?, ?, ?, ?, ?)");
-            pst.setString(1, cb.getSoTk());
-            pst.setString(2, cb.getHoTen());
-            pst.setString(3, cb.getGioiTinh());
-            pst.setString(4, cb.getDiaChi());
-            pst.setLong(5, cb.getLuong());
+            if(!checkAccountNumberExists(cb.getSoTk())) {
+                PreparedStatement pst = cn.prepareStatement("INSERT INTO tbCanBo (SoTk, Hoten, GT, DiaChi, Luong) VALUES (?, ?, ?, ?, ?)");
+                pst.setString(1, cb.getSoTk());
+                pst.setString(2, cb.getHoTen());
+                pst.setString(3, cb.getGioiTinh());
+                pst.setString(4, cb.getDiaChi());
+                pst.setLong(5, cb.getLuong());
+                int res = pst.executeUpdate();
+                return res > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+            return false;
+        }
+        return false;
+    }
+    
+    // Xóa
+    public static boolean deleteCB(String accountNumber) {
+        try {
+            PreparedStatement pst = cn.prepareStatement("DELETE FROM tbCanBo WHERE SoTK = '"+accountNumber+"'");
             int res = pst.executeUpdate();
             return res > 0;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
             return false;
         }
     }
+    
+    //Validate SoTK trùng lặp
+    public static boolean checkAccountNumberExists(String accountNumber) {
+    try {
+        PreparedStatement pst = cn.prepareStatement("SELECT 1 FROM tbCanBo WHERE SoTk = ?");
+        pst.setString(1, accountNumber);
+        ResultSet result = pst.executeQuery();
+        return result.next();
+    } catch (SQLException e) {
+        System.out.println("Error checking account number: " + e.getMessage());
+        return false;
+    }
+}
+
 }

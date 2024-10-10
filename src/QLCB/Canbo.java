@@ -10,12 +10,12 @@ package QLCB;
  */
 public class Canbo {
     private String soTk, hoTen, gioiTinh, diaChi;
-    private long Luong;
+    private int Luong;
 
     public Canbo() {
     }
 
-    public Canbo(String soTk, String hoTen, String gioiTinh, String diaChi, long Luong) {
+    public Canbo(String soTk, String hoTen, String gioiTinh, String diaChi, int Luong) {
         this.soTk = soTk;
         this.hoTen = hoTen;
         this.gioiTinh = gioiTinh;
@@ -59,7 +59,7 @@ public class Canbo {
         this.diaChi = diaChi;
     }
 
-    public void setLuong(long Luong) {
+    public void setLuong(int Luong) {
         this.Luong = Luong;
     }
 }
