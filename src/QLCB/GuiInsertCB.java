@@ -46,79 +46,79 @@ public class GuiInsertCB extends JFrame implements ActionListener, MouseListener
     }
 
     private void BuildGUI() {
-        JPanel pnLeft = new JPanel();
-        pnLeft.setLayout(new BoxLayout(pnLeft, BoxLayout.Y_AXIS));
-        pnLeft.setBorder(new EmptyBorder(10, 10, 10, 10));
+    JPanel pnLeft = new JPanel();
+    pnLeft.setLayout(new BoxLayout(pnLeft, BoxLayout.Y_AXIS));
+    pnLeft.setBorder(new EmptyBorder(20, 20, 20, 20)); // Thay đổi khoảng cách xung quanh để bố cục đều hơn.
 
-        // Thông tin cán bộ
-        JLabel lbTitle = new JLabel("Thông tin cán bộ", JLabel.CENTER);
-        lbTitle.setFont(new Font("Arial", Font.BOLD, 18));
-        lbTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        pnLeft.add(lbTitle);
-        pnLeft.add(Box.createRigidArea(new Dimension(0, 10)));
+    // Thông tin cán bộ
+    JLabel lbTitle = new JLabel("Thông tin cán bộ", JLabel.CENTER);
+    lbTitle.setFont(new Font("Arial", Font.BOLD, 20));
+    lbTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+    pnLeft.add(lbTitle);
+    pnLeft.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // Số tài khoản
-        JLabel lbAccountNumber = new JLabel("Số tài khoản: ");
-        lbAccountNumber.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        tfAccountNumber = new JTextField();
-        tfAccountNumber.setMaximumSize(new Dimension(200, 40));
-        pnLeft.add(lbAccountNumber);
-        pnLeft.add(tfAccountNumber);
-        pnLeft.add(Box.createRigidArea(new Dimension(0, 10)));
+    // Số tài khoản
+    JLabel lbAccountNumber = new JLabel("Số tài khoản: ");
+    lbAccountNumber.setAlignmentX(Component.LEFT_ALIGNMENT);
+    tfAccountNumber = new JTextField();
+    tfAccountNumber.setMaximumSize(new Dimension(300, 30));
+    pnLeft.add(lbAccountNumber);
+    pnLeft.add(tfAccountNumber);
+    pnLeft.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        // Họ tên
-        JLabel lbName = new JLabel("Họ và tên: ");
-        lbName.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        pnLeft.add(lbName);
-        tfName = new JTextField();
-        tfName.setMaximumSize(new Dimension(200, 40));
-        pnLeft.add(tfName);
-        pnLeft.add(Box.createRigidArea(new Dimension(0, 10)));
+    // Họ tên
+    JLabel lbName = new JLabel("Họ và tên: ");
+    lbName.setAlignmentX(Component.LEFT_ALIGNMENT);
+    pnLeft.add(lbName);
+    tfName = new JTextField();
+    tfName.setMaximumSize(new Dimension(300, 30));
+    pnLeft.add(tfName);
+    pnLeft.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        // Giới tính
-        JPanel pnGender = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        ButtonGroup bgGender = new ButtonGroup();
-        pnGender.add(new JLabel("Giới tính: "));
-        rbMale = new JRadioButton("Nam");
-        rbFemale = new JRadioButton("Nữ");
-        bgGender.add(rbMale);
-        bgGender.add(rbFemale);
-        pnGender.add(rbMale);
-        pnGender.add(rbFemale);
-        rbMale.setPreferredSize(new Dimension(70, 30));
-        rbFemale.setPreferredSize(new Dimension(70, 30));
-        pnLeft.add(pnGender);
-        pnLeft.add(Box.createRigidArea(new Dimension(0, 10)));
+    // Giới tính
+    JPanel pnGender = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    pnGender.setMaximumSize(new Dimension(300, 40));
+    ButtonGroup bgGender = new ButtonGroup();
+    pnGender.add(new JLabel("Giới tính: "));
+    rbMale = new JRadioButton("Nam");
+    rbFemale = new JRadioButton("Nữ");
+    bgGender.add(rbMale);
+    bgGender.add(rbFemale);
+    pnGender.add(rbMale);
+    pnGender.add(rbFemale);
+    pnLeft.add(pnGender);
+    pnLeft.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        // Địa chỉ
-        JLabel lbAddress = new JLabel("Địa chỉ: ");
-        lbAddress.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        pnLeft.add(lbAddress);
-        tfAddress = new JTextField();
-        tfAddress.setMaximumSize(new Dimension(200, 40));
-        pnLeft.add(tfAddress);
-        pnLeft.add(Box.createRigidArea(new Dimension(0, 10)));
+    // Địa chỉ
+    JLabel lbAddress = new JLabel("Địa chỉ: ");
+    lbAddress.setAlignmentX(Component.LEFT_ALIGNMENT);
+    pnLeft.add(lbAddress);
+    tfAddress = new JTextField();
+    tfAddress.setMaximumSize(new Dimension(300, 30));
+    pnLeft.add(tfAddress);
+    pnLeft.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        // Lương
-        JLabel lbSalary = new JLabel("Lương: ");
-        lbSalary.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        pnLeft.add(lbSalary);
-        tfSalary = new JTextField();
-        tfSalary.setMaximumSize(new Dimension(200, 40));
-        pnLeft.add(tfSalary);
-        pnLeft.add(Box.createRigidArea(new Dimension(0, 10)));
+    // Lương
+    JLabel lbSalary = new JLabel("Lương: ");
+    lbSalary.setAlignmentX(Component.LEFT_ALIGNMENT);
+    pnLeft.add(lbSalary);
+    tfSalary = new JTextField();
+    tfSalary.setMaximumSize(new Dimension(300, 30));
+    pnLeft.add(tfSalary);
+    pnLeft.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // Buttons
-        JPanel pnLeftBottom = new JPanel();
-        btAdd = new JButton("Thêm");
-        btEdit = new JButton("Sửa");
-        btDelete = new JButton("Xóa");
-        btSearch = new JButton("Tìm kiếm");
-        pnLeftBottom.add(btAdd);
-        pnLeftBottom.add(btEdit);
-        pnLeftBottom.add(btDelete);
-        pnLeftBottom.add(btSearch);
-        pnLeft.add(pnLeftBottom);
+    // Buttons
+    JPanel pnLeftBottom = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+    btAdd = new JButton("Thêm");
+    btEdit = new JButton("Sửa");
+    btDelete = new JButton("Xóa");
+    btSearch = new JButton("Tìm kiếm");
+    pnLeftBottom.add(btAdd);
+    pnLeftBottom.add(btEdit);
+    pnLeftBottom.add(btDelete);
+    pnLeftBottom.add(btSearch);
+    pnLeft.add(pnLeftBottom);
+
 
         // Table
         JPanel pnRight = new JPanel(new GridLayout(1, 1));
@@ -128,7 +128,6 @@ public class GuiInsertCB extends JFrame implements ActionListener, MouseListener
         pnRight.add(new JScrollPane(tb));
 
         this.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, pnLeft, pnRight));
-        //loadData(dfModel);
 
         //Bắt sự kiện kích chọn trong bảng
         tb.getSelectionModel().addListSelectionListener(e -> {

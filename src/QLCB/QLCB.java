@@ -61,7 +61,7 @@ public class QLCB {
     // Sửa
     public static boolean updateData(String SoTk, Canbo cb) {
         try {
-            PreparedStatement pst = cn.prepareStatement("UPDATE tbCanBo SET Hoten = '"+cb.getHoTen()+"', GT = '"+cb.getGioiTinh()+"', Diachi = '"+cb.getDiaChi()+"', Luong = '"+cb.getLuong()+"' WHERE SoTK = '"+SoTk+"'");
+            PreparedStatement pst = cn.prepareStatement("UPDATE tbCanBo SET Hoten = N'"+cb.getHoTen()+"', GT = N'"+cb.getGioiTinh()+"', Diachi = N'"+cb.getDiaChi()+"', Luong = '"+cb.getLuong()+"' WHERE SoTK = '"+SoTk+"'");
             int res = pst.executeUpdate();
             return res > 0;
         } catch (SQLException e) {
