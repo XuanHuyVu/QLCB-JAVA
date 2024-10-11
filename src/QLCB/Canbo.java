@@ -1,13 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package QLCB;
 
-/**
- *
- * @author Admin
- */
+
 public class Canbo {
     private String soTk, hoTen, gioiTinh, diaChi;
     private int Luong;

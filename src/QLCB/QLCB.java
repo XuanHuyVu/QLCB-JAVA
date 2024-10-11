@@ -1,44 +1,33 @@
 package QLCB;
 import java.sql.*;
-import java.util.*;
+//import java.util.*;
 
 public class QLCB {
-    private List<Canbo> dscb;
+    //private List<Canbo> dscb;
     private static Connection cn;
 
-    // Connect to the database
+    // Kết nối SQL Server
     public static void getCon() {
         try {
             cn = DriverManager.getConnection("jdbc:sqlserver://XUY\\SQLEXPRESS;database=QLCB;user=sa;password=12345678;trustServerCertificate=true;");
             System.out.println("Passed to load");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Failed to load: " + e.getMessage());
         }
     }
-
+    
+    //Lấy data theo SoTK
     public static ResultSet getData(String SoTk) {
         try {
             PreparedStatement pst = cn.prepareStatement("SELECT * FROM tbCanBo WHERE SoTk = '"+SoTk+"'");
             return pst.executeQuery();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
             return null;
         }
     }
-
-    // Sửa
-    public static boolean updateData(String SoTk, Canbo cb) {
-        try {
-            PreparedStatement pst = cn.prepareStatement("UPDATE tbCanBo SET Hoten = '"+cb.getHoTen()+"', GT = '"+cb.getGioiTinh()+"', Diachi = '"+cb.getDiaChi()+"', Luong = '"+cb.getLuong()+"' WHERE SoTK = '"+SoTk+"'");
-            int res = pst.executeUpdate();
-            return res > 0;
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-            return false;
-        }
-    }
-
-    // Get all data
+    
+    // Lấy toàn bộ dữ liệu trong database
     public static ResultSet getAllData() {
         try {
             Statement st = cn.createStatement();
@@ -48,7 +37,7 @@ public class QLCB {
             return null;
         }
     }
-
+    
     // Thêm
     public static boolean insertCB(Canbo cb) {
         try {
@@ -67,6 +56,18 @@ public class QLCB {
             return false;
         }
         return false;
+    }
+
+    // Sửa
+    public static boolean updateData(String SoTk, Canbo cb) {
+        try {
+            PreparedStatement pst = cn.prepareStatement("UPDATE tbCanBo SET Hoten = '"+cb.getHoTen()+"', GT = '"+cb.getGioiTinh()+"', Diachi = '"+cb.getDiaChi()+"', Luong = '"+cb.getLuong()+"' WHERE SoTK = '"+SoTk+"'");
+            int res = pst.executeUpdate();
+            return res > 0;
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+            return false;
+        }
     }
     
     // Xóa

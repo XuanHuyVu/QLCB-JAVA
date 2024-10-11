@@ -23,6 +23,7 @@ public class GuiInsertCB extends JFrame implements ActionListener, MouseListener
     private JButton btAdd;
     private JButton btEdit;
     private JButton btDelete;
+    private JButton btSearch;
 
     public GuiInsertCB() {
         setTitle("CHƯƠNG TRÌNH QUẢN LÝ CÁN BỘ");
@@ -112,9 +113,11 @@ public class GuiInsertCB extends JFrame implements ActionListener, MouseListener
         btAdd = new JButton("Thêm");
         btEdit = new JButton("Sửa");
         btDelete = new JButton("Xóa");
+        btSearch = new JButton("Tìm kiếm");
         pnLeftBottom.add(btAdd);
         pnLeftBottom.add(btEdit);
         pnLeftBottom.add(btDelete);
+        pnLeftBottom.add(btSearch);
         pnLeft.add(pnLeftBottom);
 
         // Table
@@ -126,7 +129,7 @@ public class GuiInsertCB extends JFrame implements ActionListener, MouseListener
 
         this.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, pnLeft, pnRight));
         //loadData(dfModel);
-        
+
         //Bắt sự kiện kích chọn trong bảng
         tb.getSelectionModel().addListSelectionListener(e -> {
             try {
@@ -143,70 +146,74 @@ public class GuiInsertCB extends JFrame implements ActionListener, MouseListener
                     tfAddress.setText(tb.getValueAt(selectedRow, 3).toString());
                     tfSalary.setText(tb.getValueAt(selectedRow, 4).toString());
                 }
-                
+
             } catch (ArrayIndexOutOfBoundsException ex) {
             }
         });
-        
-        
+
         //Bắt sự kiện thêm mới
         btAdd.addActionListener((var e) -> {
             String accountNumber = tfAccountNumber.getText().trim();
             String name = tfName.getText().trim();
             String gender = "";
-            
-            if(rbMale.isSelected()) {
+
+            if (rbMale.isSelected()) {
                 gender = rbMale.getText();
-            } else if(rbFemale.isSelected()) {
+            } else if (rbFemale.isSelected()) {
                 gender = rbFemale.getText();
             }
-            
+
             String address = tfAddress.getText().trim();
             int salary = 0;
             boolean isValid = true;
-            
+
             try {
                 salary = Integer.parseInt(tfSalary.getText().trim());
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, "Nhập lương không hợp lệ!" + ex.getMessage());
                 isValid = false;
             }
-            
-            if(accountNumber.isEmpty() || name.isEmpty() || !isValid) {
+
+            if (accountNumber.isEmpty() || name.isEmpty() || !isValid) {
                 JOptionPane.showMessageDialog(null, "Vui lòng nhập thông tin cán bộ!");
             } else {
                 if (QLCB.checkAccountNumberExists(accountNumber)) {
                     JOptionPane.showMessageDialog(null, "Số tài khoản đã tồn tại!");
                 } else {
                     boolean res = QLCB.insertCB(new Canbo(accountNumber, name, gender, address, salary));
-                    if(res) {
+                    if (res) {
                         loadData(dfModel);
                         JOptionPane.showMessageDialog(null, "Thêm cán bộ thành công!");
+                        tfAccountNumber.setText("");
+                        tfName.setText("");
+                        bgGender.clearSelection();
+                        tfAddress.setText("");
+                        tfSalary.setText("");
                     } else {
                         JOptionPane.showMessageDialog(null, "Thêm cán bộ thất bại!");
                     }
                 }
             }
         });
-        
+
         //Bắt sự kiện btn sửa
         btEdit.addActionListener(e -> {
             String accountNumber = tfAccountNumber.getText().trim();
             String name = tfName.getText().trim();
             String gender = "";
-            
-            if(rbMale.isSelected()) {
+
+            if (rbMale.isSelected()) {
                 gender = rbMale.getText();
-            } else if(rbFemale.isSelected()) {
+            } else if (rbFemale.isSelected()) {
                 gender = rbFemale.getText();
             }
-            
+
             String address = tfAddress.getText().trim();
             int salary = 0;
             boolean isValid = true;
-            
+
             ResultSet resAccountNummber = QLCB.getData(accountNumber);
-            
+
             try {
                 if (resAccountNummber != null && resAccountNummber.next()) {
                     try {
@@ -216,13 +223,18 @@ public class GuiInsertCB extends JFrame implements ActionListener, MouseListener
                         isValid = false;
                     }
 
-                    if(accountNumber.isEmpty() || name.isEmpty() || !isValid) {
+                    if (accountNumber.isEmpty() || name.isEmpty() || !isValid) {
                         JOptionPane.showMessageDialog(null, "Vui lòng nhập thông tin cán bộ!");
                     } else {
                         boolean res = QLCB.updateData(accountNumber, new Canbo(accountNumber, name, gender, address, salary));
-                        if(res) {
+                        if (res) {
                             loadData(dfModel);
                             JOptionPane.showMessageDialog(null, "Sửa cán bộ thành công!");
+                            tfAccountNumber.setText("");
+                            tfName.setText("");
+                            bgGender.clearSelection();
+                            tfAddress.setText("");
+                            tfSalary.setText("");
                         } else {
                             JOptionPane.showMessageDialog(null, "Cập nhật thất bại!");
                         }
@@ -234,7 +246,7 @@ public class GuiInsertCB extends JFrame implements ActionListener, MouseListener
                 JOptionPane.showMessageDialog(null, "Error");
             }
         });
-        
+
         //Bắt sự kiện xóa
         btDelete.addActionListener(e -> {
             String accountNumber = tfAccountNumber.getText().trim();
@@ -247,6 +259,11 @@ public class GuiInsertCB extends JFrame implements ActionListener, MouseListener
                     if (res) {
                         loadData(dfModel);
                         JOptionPane.showMessageDialog(null, "Xóa thành công!");
+                        tfAccountNumber.setText("");
+                        tfName.setText("");
+                        bgGender.clearSelection();
+                        tfAddress.setText("");
+                        tfSalary.setText("");
                     } else {
                         JOptionPane.showMessageDialog(null, "Xóa thất bại!");
                     }
@@ -254,7 +271,49 @@ public class GuiInsertCB extends JFrame implements ActionListener, MouseListener
             }
         });
 
-        
+        //Bắt sự kiện tìm kiếm
+        btSearch.addActionListener(e -> {
+            String accountNumber = tfAccountNumber.getText().trim();
+
+            if (accountNumber.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Vui lòng nhập số tài khoản để tìm kiếm!");
+            } else {
+                try {
+                    ResultSet res = QLCB.getData(accountNumber);
+                    if (res != null && res.next()) {
+                        // Xóa dữ liệu cũ trong bảng
+                        dfModel.setRowCount(0);
+
+                        // Thêm kết quả tìm kiếm vào bảng
+                        dfModel.addRow(new String[]{
+                            res.getString("SoTk"),
+                            res.getString("Hoten"),
+                            res.getString("GT"),
+                            res.getString("DiaChi"),
+                            res.getString("Luong")
+                        });
+
+                        // Hiển thị thông tin trong các ô nhập liệu
+                        tfName.setText(res.getString("Hoten"));
+                        String gender = res.getString("GT");
+                        if (gender.equals("Nam")) {
+                            rbMale.setSelected(true);
+                        } else if (gender.equals("Nữ")) {
+                            rbFemale.setSelected(true);
+                        }
+                        tfAddress.setText(res.getString("DiaChi"));
+                        tfSalary.setText(res.getString("Luong"));
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Không tìm thấy cán bộ với số tài khoản: " + accountNumber);
+                        // Xóa dữ liệu bảng nếu không tìm thấy
+                        dfModel.setRowCount(0);
+                    }
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, "Lỗi tìm kiếm: " + ex.getMessage());
+                }
+            }
+        });
+
         loadData(dfModel);
     }
 
@@ -287,20 +346,26 @@ public class GuiInsertCB extends JFrame implements ActionListener, MouseListener
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {}
+    public void actionPerformed(ActionEvent e) {
+    }
 
     @Override
-    public void mouseClicked(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {
+    }
 
     @Override
-    public void mousePressed(MouseEvent e) {}
+    public void mousePressed(MouseEvent e) {
+    }
 
     @Override
-    public void mouseReleased(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {
+    }
 
     @Override
-    public void mouseEntered(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {
+    }
 
     @Override
-    public void mouseExited(MouseEvent e) {}
+    public void mouseExited(MouseEvent e) {
+    }
 }
