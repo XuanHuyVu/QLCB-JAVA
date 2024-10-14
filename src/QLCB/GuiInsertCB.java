@@ -126,7 +126,6 @@ public class GuiInsertCB extends JFrame implements ActionListener, MouseListener
         dfModel = new DefaultTableModel(headers, 0);
         tb = new JTable(dfModel);
         pnRight.add(new JScrollPane(tb));
-
         this.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, pnLeft, pnRight));
 
         //Bắt sự kiện kích chọn trong bảng
@@ -304,7 +303,6 @@ public class GuiInsertCB extends JFrame implements ActionListener, MouseListener
                         tfSalary.setText(res.getString("Luong"));
                     } else {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy cán bộ với số tài khoản: " + accountNumber);
-                        // Xóa dữ liệu bảng nếu không tìm thấy
                         dfModel.setRowCount(0);
                     }
                 } catch (SQLException ex) {

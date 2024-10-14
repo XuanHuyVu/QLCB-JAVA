@@ -4,8 +4,6 @@
  */
 package QLCB;
 
-import java.util.*;
-import javax.naming.ldap.SortKey;
 
 /**
  *
@@ -19,6 +17,7 @@ public class Test_insertCB {
     
     public static void main(String[] args) {
         QLCB ql = new QLCB();
-        ql.selectCanBo();      
+        //ql.getCon();
+        //ql.selectCanBo();      
     }
 }
